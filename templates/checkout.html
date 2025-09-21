@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Informations de livraison{% endblock %}
+
+{% block content %}
+<h2>Informations de livraison</h2>
+<form method="POST" action="{{ url_for('finalize_order') }}" style="max-width:500px;margin:auto;display:flex;flex-direction:column;gap:10px;">
+    <label>Nom</label>
+    <input type="text" name="nom" value="{{ user.nom }}" readonly>
+
+    <label>Prénom</label>
+    <input type="text" name="prenom" value="{{ user.prenom }}" readonly>
+
+    <label>Email</label>
+    <input type="email" name="email" value="{{ user.email }}" readonly>
+
+    <label>Adresse</label>
+    <input type="text" name="adresse" value="{{ user.adresse }}" readonly>
+
+    <label>Numéro de téléphone</label>
+    <input type="text" name="phone" required placeholder="Votre téléphone">
+
+    <button type="submit" style="padding:8px;background:#028090;color:white;border:none;border-radius:6px;">Valider la commande</button>
+</form>
+{% endblock %}

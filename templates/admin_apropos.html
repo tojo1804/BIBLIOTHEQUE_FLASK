@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Admin - A propos{% endblock %}
+
+{% block content %}
+<h2>Ajouter une image pour la page A Propos</h2>
+<form method="POST" enctype="multipart/form-data" 
+      style="max-width:500px;margin:auto;display:flex;flex-direction:column;gap:10px;">
+    <label>Image</label>
+    <input type="file" name="image_file" accept="image/*" required>
+
+    <label>Légende (texte affiché sous l’image)</label>
+    <textarea name="texte" rows="3" placeholder="Ex: Notre histoire..." required></textarea>
+
+    <button type="submit" style="padding:8px;background:#028090;color:white;border:none;border-radius:8px;">
+      Publier
+    </button>
+</form>
+
+<hr>
+<h2>Images publiées</h2>
+<table style="width:100%;border-collapse:collapse;">
+  <thead>
+    <tr>
+      <th style="border:1px solid #ccc;padding:6px;">Image</th>
+      <th style="border:1px solid #ccc;padding:6px;">Texte</th>
+      <th style="border:1px solid #ccc;padding:6px;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in apropos %}
+    <tr>
+      <td style="border:1px solid #ccc;padding:6px;">
+        <img src="{{ url_for('static', filename='images/' ~ a[1]) }}" width="80">
+      </td>
+      <td style="border:1px solid #ccc;padding:6px;">{{ a[2] }}</td>
+      <td style="border:1px solid #ccc;padding:6px;">
+        <a href="{{ url_for('delete_apropos', apropos_id=a[0]) }}" style="color:red;">Supprimer</a>
+
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Ajouter Produit{% endblock %}
+
+{% block content %}
+<h2 style="text-align:center;margin-bottom:20px;">Ajouter un produit</h2>
+
+<form method="POST" enctype="multipart/form-data" 
+      style="max-width:500px;margin:auto;display:flex;flex-direction:column;gap:10px;">
+    
+    <label>Nom du produit</label>
+    <input type="text" name="nom_de_produit" required>
+
+    <label>Catégorie</label>
+    <input type="text" name="categorie" required>
+
+    <label>Prix (€)</label>
+    <input type="number" step="0.01" name="prix" required>
+
+    <label>Description</label>
+    <textarea name="description" rows="4"></textarea>
+
+    <label>Image du produit</label>
+    <input type="file" name="image_file" accept="image/*" required>
+
+    <button type="submit" 
+            style="padding:8px; background:#028090;color:white;border:none;border-radius:8px;">
+        Ajouter
+    </button>
+</form>
+
+<hr style="margin:30px 0;">
+
+<h2 style="text-align:center;margin-bottom:10px;">Liste des produits</h2>
+
+<table style="width:100%;border-collapse:collapse;">
+  <thead>
+    <tr>
+      <th style="border:1px solid #a7d8de;padding:6px;">ID</th>
+      <th style="border:1px solid #a7d8de;padding:6px;">Nom</th>
+      <th style="border:1px solid #a7d8de;padding:6px;">Catégorie</th>
+      <th style="border:1px solid #a7d8de;padding:6px;">Prix</th>
+      <th style="border:1px solid #a7d8de;padding:6px;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for produit in produits %}
+    <tr>
+      <td style="border:1px solid #a7d8de;padding:6px;text-align:center">{{ produit[0] }}</td>
+      <td style="border:1px solid #a7d8de;padding:6px">{{ produit[1] }}</td>
+      <td style="border:1px solid #a7d8de;padding:6px">{{ produit[2] }}</td>
+      <td style="border:1px solid #a7d8de;padding:6px;text-align:right">{{ produit[3] }} €</td>
+      <td style="border:1px solid #a7d8de;padding:6px;text-align:center">
+        <a href="{{ url_for('edit_produit', produit_id=produit[0]) }}" 
+           style="margin-right:5px;">Modifier</a>
+        <a href="{{ url_for('delete_produit', produit_id=produit[0]) }}" 
+           style="color:red;">Supprimer</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

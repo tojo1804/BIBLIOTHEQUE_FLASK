@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Votre Panier{% endblock %}
+
+{% block content %}
+<h2>Votre Panier</h2>
+{% if produits %}
+<table style="width:100%; border-collapse:collapse;">
+    <thead>
+        <tr>
+            <th style="border:1px solid #ccc;padding:6px;">Produit</th>
+            <th style="border:1px solid #ccc;padding:6px;">Prix (€)</th>
+            <th style="border:1px solid #ccc;padding:6px;">Quantité</th>
+            <th style="border:1px solid #ccc;padding:6px;">Total (€)</th>
+            <th style="border:1px solid #ccc;padding:6px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in produits %}
+        {% set prix = p[2]|float %}
+        {% set quantite = p[4]|int %}
+        {% set total_produit = prix * quantite %}
+        <tr>
+            <td style="border:1px solid #ccc;padding:6px;">
+                <img src="{{ url_for('static', filename='images/' ~ p[3]) }}" width="50" style="vertical-align:middle;margin-right:6px;">
+                {{ p[1] }}
+            </td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:right;">{{ prix }}</td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:center;">
+                <form action="{{ url_for('update_cart', panier_id=p[0]) }}" method="POST" style="display:inline-flex; gap:4px;">
+                    <input type="number" name="quantite" value="{{ quantite }}" min="1" style="width:50px; text-align:center;">
+                    <button type="submit" style="padding:4px 8px;background:#028090;color:white;border:none;border-radius:4px;">Modifier</button>
+                </form>
+            </td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:right;">{{ total_produit }}</td>
+            <td style="border:1px solid #ccc;padding:6px;text-align:center;">
+                <a href="{{ url_for('delete_cart', panier_id=p[0]) }}" style="color:red;">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Total général calculé côté Flask -->
+<h3 style="text-align:right; margin-top:10px;">Total général: {{ total_general }} €</h3>
+
+<a href="{{ url_for('checkout') }}" style="display:inline-block;padding:8px 16px;background:#028090;color:white;border-radius:6px;text-decoration:none;margin-top:10px;">Checkout</a>
+
+{% else %}
+<p>Votre panier est vide.</p>
+{% endif %}
+{% endblock %}

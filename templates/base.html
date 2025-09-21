@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>{% block title %}Bibliothèque{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="{{ url_for('index') }}" class="brand">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo Bibliothèque" class="logo" style="width:62px; height:62px; border-radius:8px;">
+        </a>
+
+        <!-- Menu desktop -->
+        <nav class="menu">
+          <a href="{{ url_for('index') }}">Accueil</a>
+          <div class="dropdown" id="categoryDropdown">
+            <button class="drop-btn">Catégorie <i class="fa-solid fa-chevron-down"></i></button>
+            <div class="drop-panel" id="categoryPanel">
+              <a href="{{ url_for('categorie', categorie='Livre profane') }}">Livre profane</a>
+              <a href="{{ url_for('categorie', categorie='Livre saint') }}">Livre saint</a>
+              <a href="#">Bible</a>
+              <a href="#">Roman</a>
+            </div>
+          </div>
+          <a href="{{ url_for('apropos') }}">À propos</a>
+
+          {% if session.get('email') %}
+            <a href="{{ url_for('logout') }}">Déconnexion</a>
+            {% if session.get('is_admin') %}
+            <div class="dropdown" id="adminDropdown">
+              <button class="drop-btn">Admin <i class="fa-solid fa-chevron-down"></i></button>
+              <div class="drop-panel" id="adminPanel">
+                <a href="{{ url_for('admin_orders') }}">Commande</a>
+                <a href="{{ url_for('admin') }}">Admin Page</a>
+                <a href="{{ url_for('admin_apropos') }}">Admin Apropos</a>
+              </div>
+            </div>
+            {% endif %}
+          {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('create_user') }}">S'inscrire</a>
+          {% endif %}
+        </nav>
+
+        <!-- Actions -->
+        <div class="actions">
+          <form class="search" action="{{ url_for('recherche') }}" method="GET">
+            <input type="text" name="q" placeholder="Rechercher un livre..." required>
+            <button type="submit" class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </form>
+          <a href="{{ url_for('view_cart') }}" class="icon-btn">
+            <i class="fa-solid fa-shopping-cart"></i> ({{ session.get('cart_count', 0) }})
+          </a>
+          <button class="mobile-toggle" id="mobileToggle"><i class="fa-solid fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile panel -->
+  <div class="mobile-panel" id="mobilePanel">
+    <a href="{{ url_for('index') }}">Accueil</a>
+    <div class="accordion">
+      <button class="accordion-btn">Catégorie <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="panel">
+        <a href="{{ url_for('categorie', categorie='Livre profane') }}">Livre profane</a>
+        <a href="{{ url_for('categorie', categorie='Livre saint') }}">Livre saint</a>
+        <a href="#">Bible</a>
+        <a href="#">Roman</a>
+      </div>
+    </div>
+    <a href="{{ url_for('apropos') }}">À propos</a>
+
+    {% if session.get('email') %}
+      <a href="{{ url_for('logout') }}">Déconnecter</a>
+      {% if session.get('is_admin') %}
+      <div class="accordion">
+        <button class="accordion-btn">Admin <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="panel">
+          <a href="{{ url_for('admin_orders') }}">Commande</a>
+          <a href="{{ url_for('admin') }}">Admin Page</a>
+          <a href="{{ url_for('admin_apropos') }}">Admin Apropos</a>
+        </div>
+      </div>
+      {% endif %}
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('create_user') }}">S'inscrire</a>
+    {% endif %}
+  </div>
+
+  <!-- CONTENT -->
+  <main>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Bibliothèque. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Dropdown desktop sécurisé
+    (function(){
+      const dropBtn = document.querySelector('#categoryDropdown .drop-btn');
+      const panel = document.getElementById('categoryPanel');
+
+      const adminDropdown = document.getElementById('adminDropdown');
+      const adminBtn = adminDropdown ? adminDropdown.querySelector('.drop-btn') : null;
+      const adminPanel = document.getElementById('adminPanel');
+
+      function closeAll(){
+        if(panel) panel.style.display='none';
+        if(adminPanel) adminPanel.style.display='none';
+      }
+
+      if(dropBtn && panel){
+        dropBtn.addEventListener('click', ()=>{ panel.style.display = panel.style.display==='block'?'none':'block'; });
+      }
+
+      if(adminBtn && adminPanel){
+        adminBtn.addEventListener('click', ()=>{ adminPanel.style.display = adminPanel.style.display==='block'?'none':'block'; });
+      }
+
+      document.addEventListener('click', e=>{
+        if(!e.target.closest('#categoryDropdown') && (!adminDropdown || !e.target.closest('#adminDropdown'))) closeAll();
+      });
+    })();
+
+    // Mobile panel open/close
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobilePanel = document.getElementById('mobilePanel');
+    if(mobileToggle && mobilePanel){
+      mobileToggle.addEventListener('click', ()=>{ mobilePanel.classList.toggle('open'); });
+    }
+
+    // Accordion in mobile panel
+    document.querySelectorAll('.accordion-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const panel=btn.nextElementSibling;
+        panel.style.display=panel.style.display==='flex'?'none':'flex';
+      });
+    });
+  </script>
+</body>
+</html>

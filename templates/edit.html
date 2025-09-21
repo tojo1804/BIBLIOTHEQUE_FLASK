@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier Produit{% endblock %}
+
+{% block content %}
+<h2>Modifier le produit</h2>
+<form method="POST" enctype="multipart/form-data" style="max-width:500px;margin:auto;display:flex;flex-direction:column;gap:10px;">
+    <label>Nom du produit</label>
+    <input type="text" name="nom_de_produit" value="{{ produit[1] }}" required>
+    
+    <label>Catégorie</label>
+    <input type="text" name="categorie" value="{{ produit[2] }}" required>
+
+    <label>Prix (€)</label>
+    <input type="number" step="0.01" name="prix" value="{{ produit[3] }}" required>
+
+    <label>Description</label>
+    <textarea name="description" rows="4">{{ produit[4] }}</textarea>
+
+    <label>Image actuelle</label>
+    <img src="{{ url_for('static', filename='images/' ~ produit[5]) }}" alt="{{ produit[1] }}" style="width:150px;height:auto;margin-bottom:10px;border-radius:6px;">
+
+    <label>Changer l'image (facultatif)</label>
+    <input type="file" name="image_file" accept="image/*">
+
+    <button type="submit" style="padding:8px; background:#028090;color:white;border:none;border-radius:8px;">Enregistrer les modifications</button>
+</form>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{{ url_for('admin') }}" style="text-decoration:none;color:#028090;">← Retour à l'admin</a>
+</div>
+{% endblock %}

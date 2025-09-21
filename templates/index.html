@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - Bibliothèque{% endblock %}
+
+{% block content %}
+<section class="books">
+  <div class="books-grid">
+    {% for produit in produits %}
+    <div class="book-card">
+      <img src="{{ url_for('static', filename='images/' ~ produit[5]) }}" alt="{{ produit[1] }}">
+      <h3>{{ produit[1] }}</h3>
+      <p>{{ produit[4] }}</p>
+      <p style="font-weight:bold; color:#005f73;">Prix : {{ produit[3] }}€</p>
+      <a href="{{ url_for('produit_detail', produit_id=produit[0]) }}" class="btn">Voir le produit</a>
+
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

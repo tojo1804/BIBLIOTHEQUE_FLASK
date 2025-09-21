@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Les fils de Saint Paul Apôtre à Madagascar{% endblock %}
+
+{% block content %}
+<h2 style="text-align:center; color:#028090; margin-top:10px;">
+  Les fils de Saint Paul Apôtre à Madagascar
+</h2>
+
+<div class="slider-container">
+  <div class="slider" id="slider">
+    {% for a in apropos %}
+    <div class="slide">
+      <img src="{{ url_for('static', filename='images/' ~ a[1]) }}" alt="image" />
+      <div class="caption">
+        {{ a[2] }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <button class="prev" onclick="prevSlide()">&#10094;</button>
+  <button class="next" onclick="nextSlide()">&#10095;</button>
+</div>
+
+<div class="apropos-content">
+  <div class="card">
+    <h3>Origine</h3>
+    <p>
+      Ici vous pouvez décrire l’origine des Fils de Saint Paul Apôtre à Madagascar :
+      leur histoire, leurs missions, leurs fondateurs et leur impact dans la société.
+    </p>
+  </div>
+  <div class="card">
+    <h3>Spécificité</h3>
+    <p>
+      Ici vous pouvez décrire les spécificités : valeurs, projets,
+      activités et initiatives qui les distinguent et les rendent uniques.
+    </p>
+  </div>
+</div>
+
+<style>
+/* Slider */
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  transition: transform 0.8s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  filter: brightness(85%);
+}
+
+.caption {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 15px;
+  background: rgba(2, 128, 144, 0.8);
+  color: white;
+  text-align: center;
+  font-size: 18px;
+  animation: fadeIn 1.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.3);
+  color: white;
+  border: none;
+  font-size: 30px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+.prev:hover, .next:hover {
+  opacity: 1;
+}
+.prev { left: 20px; }
+.next { right: 20px; }
+
+/* Content below slider */
+.apropos-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 15px;
+}
+
+.card {
+  background: #f5faff;
+  padding: 20px;
+  border-left: 5px solid #028090;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  color: #028090;
+  margin-bottom: 10px;
+}
+</style>
+
+<script>
+let currentIndex = 0;
+const slides = document.querySelectorAll('.slide');
+const slider = document.getElementById('slider');
+
+function showSlide(index) {
+  if (index >= slides.length) currentIndex = 0;
+  else if (index < 0) currentIndex = slides.length - 1;
+  else currentIndex = index;
+  slider.style.transform = 'translateX(' + (-currentIndex * 100) + '%)';
+}
+
+function nextSlide() { showSlide(currentIndex + 1); }
+function prevSlide() { showSlide(currentIndex - 1); }
+
+setInterval(nextSlide, 6000);
+</script>
+{% endblock %}
